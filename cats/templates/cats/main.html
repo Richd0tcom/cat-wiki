@@ -1,0 +1,134 @@
+{% extends 'cats/base.html' %}
+
+{% block header%}
+    <div id="hero" class="relative pt-6 pl-4 pb-8 md:pb-[8.625rem] xl:pb-32 bg-black text-white md:pl-16 xl:pl-24 md:pt-16 xl:pt-24 h-[170px] md:h-[490px]">
+        <div class="absolute top-5 left-5 md:top-16 md:left-16 xl:top-28 xl:left-24 z-[10000000000] w-1/2 ">
+            <h1 class="leading-4 font-normal text-sm md:text-6xl md:leading-[5.4rem]">Catwiki <span class="material-symbols-outlined md:text-6xl md:pt-3">
+                pets
+                </span></h1>
+            <p class="leading-3 font-medium text-xs mt-2 md:text-2xl md:leading-7 md:mt-3">Get to know more about<br class="md:hidden"> your<br class="hidden md:block"> cat breed</p>
+
+            <div class="mt-5 md:mt-16 flex items-center md:w-3/4">
+                <form class="relative w-full">
+                    <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                      <svg
+                        class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                        fill="currentColor"
+                        view-box="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <input
+                      type="search"
+                      id="cat-search"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Search by name"
+                    />
+                    
+                </form>
+
+            </div>
+            <ul class="mt-3 bg-white text-black rounded-lg max-h-[200px] overflow-auto md:w-3/4" id="suggestions"></ul>
+        </div>
+        <figure class=" absolute top-0 right-0 h-full object-contain overflow-hidden w-3/4">
+            <img src="https://images.pexels.com/photos/134060/pexels-photo-134060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="cat vector" class="w-full h-auto object-contain">
+        </figure>
+    </div>
+    <script>
+
+        const data = JSON.parse("{{cats|escapejs}}");
+        console.log(data)
+    
+        function findMatches(wordToMatch, animals) {
+        return animals.filter( animal => {
+        // here we need to figure out if the cat breed matches what was searched
+        const regex = new RegExp(wordToMatch, 'gi');
+        return animal.name.match(regex);
+      });}
+    
+    
+      function displayMatches() {
+        console.log(this.value)
+      const matchArray = findMatches(this.value, data);
+      const html = matchArray.map(ct => {
+
+
+        const regex = new RegExp(this.value, 'gi');
+        const catName = ct.name.replace(regex, `<span class="bg-[#ffc600]">${this.value}</span>`);
+        return `
+          <li class=" py-2 md:py-3 px-3 w-full text-xs md:text-base border">
+            ${catName}
+          </li>
+        `;
+      }).join('');
+      suggestions.innerHTML = html;
+     }
+    
+     const search = document.querySelector('#cat-search');
+     const suggestions = document.querySelector('#suggestions');
+    
+     search.addEventListener('change', displayMatches);
+     search.addEventListener('keyup', displayMatches);
+    
+    
+    </script>
+
+{% endblock %}
+
+{% block main %}
+  <main class="px-6 md:px-16 xl:px-24">
+    <section class="px-5 pt-5 md:pt-12 bg-[#E3E1DC] md:px-16 pb-14">
+        <div class="">
+            <h4 class="text-xs font-medium leading-4 ">Most Searched Breeds</h4>
+            <div class="h-[3px] w-[40px] rounded-lg bg-black mt-[7px]"></div>
+            <h2 class="text-lg font-bold leading-5 text-[#291507] mt-4 md:text-6xl md:leading-[5.4rem]">66+ Breeds For you <br>to discover</h2>
+        </div>
+        <div class="mt-6 grid grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 gap-x-3 md:gap-x-12 gap-y-5">
+          <figure>
+            <div class="aspect-square  rounded-lg md:rounded-3xl object-cover"><img src="https://images.pexels.com/photos/209800/pexels-photo-209800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class=" w-full h-full rounded-lg md:rounded-3xl object-cover"></div>
+            <figcaption class="mt-3 md:mt-5 text-sm font-medium leading-4">Bengal</figcaption>
+          </figure>
+          <figure>
+            <div class="aspect-square  rounded-lg md:rounded-3xl object-cover"><img src="https://images.pexels.com/photos/209800/pexels-photo-209800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class=" w-full h-full rounded-lg md:rounded-3xl object-cover"></div>
+            <figcaption class="mt-3 md:mt-5 text-sm font-medium leading-4">Bengal</figcaption>
+          </figure>
+          <figure>
+            <div class="aspect-square  rounded-lg md:rounded-3xl object-cover"><img src="https://images.pexels.com/photos/209800/pexels-photo-209800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class=" w-full h-full rounded-lg md:rounded-3xl object-cover"></div>
+            <figcaption class="mt-3 md:mt-5 text-sm font-medium leading-4">Bengal</figcaption>
+          </figure>
+          <figure>
+            <div class="aspect-square  rounded-lg md:rounded-3xl object-cover"><img src="https://images.pexels.com/photos/209800/pexels-photo-209800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class=" w-full h-full rounded-lg md:rounded-3xl object-cover"></div>
+            <figcaption class="mt-3 md:mt-5 text-sm font-medium leading-4">Bengal</figcaption>
+          </figure>
+        </div>
+    </section>
+    <section class="mt-16 md:px-16 md:flex md:gap-x-14 md:mt-[6.2rem]">
+        <div class="md:w-1/2 self-center">
+            <div class="h-[3px] w-[40px] rounded-lg bg-black mt-[7px]"></div>
+            <div class="mt-4">
+                <h2 class="font-bold text-[2.5rem] leading-[3.125rem] md:text-5xl">Why should<br class=" md:hiden"> you have a cat?</h2>
+                <p class="mt-10 font-medium text-lg leading-6 text-left">Having a cat around you can actually trigger the release of calming chemicals in your body which lower your stress and anxiety leves</p>
+                <div class="mt-7">
+                    <a href="" class="text-xs leading-3 font-bold">READ MORE &rarr;</a>
+                </div>
+                
+            </div>
+        </div>
+        <div class="mt-5 md:mt-0 masonry-sm break-inside basis-1/2">
+            <div class=""><img src="https://images.pexels.com/photos/1482354/pexels-photo-1482354.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-lg md:rounded-3xl"></div>
+            <div class="mt-6"><img src="https://images.pexels.com/photos/1813282/pexels-photo-1813282.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-lg md:rounded-3xl"></div>
+            <div class="mt-6"><img src="https://images.pexels.com/photos/10856688/pexels-photo-10856688.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-lg md:rounded-3xl"></div>
+        </div>
+        
+    </section>
+    
+    
+  </main>
+{% endblock %}
+
