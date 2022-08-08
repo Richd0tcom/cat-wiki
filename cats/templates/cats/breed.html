@@ -6,32 +6,34 @@
     <div class=" px-4 lg:pl-[8.3rem] lg:pr-52 flex flex-col lg:flex-row md:gap-x-28 gap-y-5 ">
         <figure class="w-60 h-60 xl:min-w-[22.5rem] xl:min-h-[22.5rem] self-center md:self-start"><img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl"></figure>
         <article class="">
-            <h1 class="leading-10 font-semibold text-2xl md:text-4xl">Bengal</h1>
-            <p class="mt-6 font-medium text-xs md:text-lg leading-5">Bengals are a lot of fun to live with, but they're definitely not the cat for everyone, or for first-time cat owners. Extremely intelligent, curious and active, they demand a lot of interaction and woe betide the owner who doesn't provide it.</p>
+            <h1 class="leading-10 font-semibold text-2xl md:text-4xl">{{catbreed.name}}</h1>
+            <p class="mt-6 font-medium text-xs md:text-lg leading-5">{{catbreed.description}}</p>
             <div class="mt-8">
                 <ul>
-                    <li class="flex">
+                    <li class="flex mt-6">
                         <strong>Temperament</strong>
-                        <div><p>Alert, Agile, Energetic, Demanding, Intelligent</p></span></div>
+                        <div><p>{{catbreed.temperament}}</p></span></div>
                     </li>
-                    <li class="flex">
+                    <li class="flex mt-6">
                         <strong class="text-sm leading-3 md:text-base md:leading-5">Origin: </strong>
-                        <div><p class="text-sm leading-3 md:text-base md:leading-5">United States</p></div>
+                        <div><p class="text-sm leading-3 md:text-base md:leading-5">{{catbreed.origin}}</p></div>
                     </li>
-                    <li class="flex">
+                    <li class="flex mt-6">
                         <strong>Life span</strong>
                         <div><span class="w-h-3"></span><span class="w-h-3"></span></div>
                     </li>
                     <ul>
-                        <li class="flex">
+                        <li class="flex mt-6">
                             <strong>Adaptability</strong>
-                            <div><span class="w-h-3"></span><span class="w-h-3"></span></div>
+                            <div class="w-full">
+                                
+                            </div>
                         </li>
-                        <li class="flex">
+                        <li class="flex mt-6">
                             <strong></strong>
                             <div><span class="w-h-3"></span><span class="w-h-3"></span></div>
                         </li>
-                        <li class="flex">
+                        <li class="flex mt-6">
                             <strong></strong>
                             <div><span class="w-h-3"></span><span class="w-h-3"></span></div>
                         </li>
@@ -43,17 +45,52 @@
     </div>
     <div class="px-4 md:px-[8.3rem] mt-10 md:mt-20">
         <h3 class="font-semibold leading-7 md:leading-10 text-2xl md:text-4xl">Other photos</h3>
-        <div class="mt-10 grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-2 gap-6 md:gap-11">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
-            <img src="https://cdn2.thecatapi.com/images/bz15V3Kvg.jpg" alt="" class="aspect-square object-cover rounded-xl">
+        <div id="more-photos" class="mt-10 grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-2 gap-6 md:gap-11">
         </div>
     </div>
 </section>
+
+<script>
+
+const morePhotos = document.querySelector('#more-photos');
+
+
+    const prom1 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom2 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom3 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom4 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom5 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom6 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom7 = fetch("https://api.thecatapi.com/v1/images/search");
+    const prom8 = fetch("https://api.thecatapi.com/v1/images/search");
+
+    const arr = [];
+    const p = Promise.all([prom1, prom2, prom3, prom4, prom5, prom6, prom7, prom8]).then((res) => {
+	// Get a JSON object from each of the responses
+	return Promise.all(res.map( re => {
+		return re.json();
+	}));
+}).then(function (data) {
+	// Log the data to the console
+	
+    data.forEach(d=> arr.push(d[0]));
+
+
+	console.log(arr);
+        const html = arr.map( ele => {
+        return `<img src=${ele.url} alt="" class="aspect-square object-cover rounded-xl">`
+    }).join('');
+
+    morePhotos.innerHTML = html;
+}).catch(function (error) {
+	// if there's an error, log it
+	console.log(error);
+});
+
+
+
+
+    
+</script>
     
 {% endblock %}

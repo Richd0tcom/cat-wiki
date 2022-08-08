@@ -1,7 +1,7 @@
 {% extends 'cats/base.html' %}
 
 {% block header%}
-    <div id="hero" class="relative pt-6 pl-4 pb-8 md:pb-[8.625rem] xl:pb-32 bg-black text-white md:pl-16 xl:pl-24 md:pt-16 xl:pt-24 h-[170px] md:h-[490px]">
+    <div id="hero" class="relative pt-6 pl-4 pb-8 md:pb-[8.625rem] xl:pb-32 bg-black text-white md:pl-16 xl:pl-24 md:pt-16 xl:pt-24 h-[170px] md:h-[490px] rounded-t-3xl">
         <div class="absolute top-5 left-5 md:top-16 md:left-16 xl:top-28 xl:left-24 z-[10000000000] w-1/2 ">
             <h1 class="leading-4 font-normal text-sm md:text-6xl md:leading-[5.4rem]">Catwiki <span class="material-symbols-outlined md:text-6xl md:pt-3">
                 pets
@@ -9,34 +9,36 @@
             <p class="leading-3 font-medium text-xs mt-2 md:text-2xl md:leading-7 md:mt-3">Get to know more about<br class="md:hidden"> your<br class="hidden md:block"> cat breed</p>
 
             <div class="mt-5 md:mt-16 flex items-center md:w-3/4">
-                <form class="relative w-full">
-                    <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                      <svg
-                        class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                        fill="currentColor"
-                        view-box="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <input
-                      type="search"
-                      id="cat-search"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Search by name"
-                    />
-                    
-                </form>
-
+              <form method="POST" action="" class="relative w-full">
+                {% csrf_token %}
+                  
+                  <input
+                    type="search"
+                    id="cat-search"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full md:pl-10 p-2  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search by name" name="catsearch"
+                  />
+                  <input type="hidden" name="catid" id="catid" value="">
+                  <button type="submit" name="catsearchsubmit" class="flex absolute inset-y-0 right-0 items-center pr-3 ">
+                    <svg
+                      class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                      fill="currentColor"
+                      view-box="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
+              </form>
+                
             </div>
             <ul class="mt-3 bg-white text-black rounded-lg max-h-[200px] overflow-auto md:w-3/4" id="suggestions"></ul>
         </div>
-        <figure class=" absolute top-0 right-0 h-full object-contain overflow-hidden w-3/4">
+        <figure class=" absolute top-0 right-0 h-full object-contain overflow-hidden w-3/4 rounded-t-3xl">
             <img src="https://images.pexels.com/photos/134060/pexels-photo-134060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="cat vector" class="w-full h-auto object-contain">
         </figure>
     </div>
@@ -62,7 +64,7 @@
         const regex = new RegExp(this.value, 'gi');
         const catName = ct.name.replace(regex, `<span class="bg-[#ffc600]">${this.value}</span>`);
         return `
-          <li class=" py-2 md:py-3 px-3 w-full text-xs md:text-base border">
+          <li class="catlist py-2 md:py-3 px-3 w-full text-xs md:text-base border" data-uid="${ct.id}" data-value="${ct.name}">
             ${catName}
           </li>
         `;
@@ -70,12 +72,23 @@
       suggestions.innerHTML = html;
      }
     
+     
      const search = document.querySelector('#cat-search');
      const suggestions = document.querySelector('#suggestions');
+     const catid = document.querySelector('#catid');
     
-     search.addEventListener('change', displayMatches);
+     
      search.addEventListener('keyup', displayMatches);
-    
+     
+     suggestions.addEventListener('click', (e)=>{
+      if (e.target.matches('.catlist')) {
+        
+        search.value = e.target.dataset.value;
+        catid.value = e.target.dataset.uid;
+        console.log(e.target.dataset.uid)
+        console.log(catid)
+      }
+     });
     
     </script>
 
@@ -83,7 +96,7 @@
 
 {% block main %}
   <main class="px-6 md:px-16 xl:px-24">
-    <section class="px-5 pt-5 md:pt-12 bg-[#E3E1DC] md:px-16 pb-14">
+    <section class="px-5 pt-5 md:pt-12 bg-[#E3E1DC] md:px-16 pb-14 rounded-b-3xl">
         <div class="">
             <h4 class="text-xs font-medium leading-4 ">Most Searched Breeds</h4>
             <div class="h-[3px] w-[40px] rounded-lg bg-black mt-[7px]"></div>
@@ -121,9 +134,9 @@
             </div>
         </div>
         <div class="mt-5 md:mt-0 masonry-sm break-inside basis-1/2">
-            <div class=""><img src="https://images.pexels.com/photos/1482354/pexels-photo-1482354.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-lg md:rounded-3xl"></div>
-            <div class="mt-6"><img src="https://images.pexels.com/photos/1813282/pexels-photo-1813282.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-lg md:rounded-3xl"></div>
-            <div class="mt-6"><img src="https://images.pexels.com/photos/10856688/pexels-photo-10856688.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-lg md:rounded-3xl"></div>
+            <div class=""><img src="https://images.pexels.com/photos/1482354/pexels-photo-1482354.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-xl md:rounded-3xl"></div>
+            <div class="mt-6"><img src="https://images.pexels.com/photos/1813282/pexels-photo-1813282.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-xl md:rounded-3xl"></div>
+            <div class="mt-6"><img src="https://images.pexels.com/photos/10856688/pexels-photo-10856688.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" class="w-full h-auto rounded-xl md:rounded-3xl"></div>
         </div>
         
     </section>
