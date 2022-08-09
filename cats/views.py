@@ -12,20 +12,23 @@ res = catApi()
 
 def getCats(request):
     if request.method == 'POST':
-        print(request.POST)
+        
         catbreed = request.POST.get('catsearch')
         catid = request.POST.get('catid')
-        print(catbreed)
+        
         
         return HttpResponseRedirect(f'/breeds/{catid}')
 
     data = dumps(res)
     return render(request, 'cats/main.html', {'cats': data})
 
+def topten(request):
+    return render(request, 'cats/topten.html')
+
 def displayCats(request, breed):
     brd = list(filter(lambda x: x["id"] == str(breed), res))
     if brd:
-        print(list(filter(lambda x: x["id"] == breed, res)))
+        
         return render(request, 'cats/breed.html', {"catbreed": brd[0]})
     else:
         return HttpResponse('Cat breed not found')
