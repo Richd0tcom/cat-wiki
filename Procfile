@@ -1,1 +1,1 @@
-web: gunicorn catwiki.wsgi:application --log-file -
+web: gunicorn catwki.wsgi:application --log-file -
